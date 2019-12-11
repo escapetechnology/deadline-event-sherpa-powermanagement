@@ -8,34 +8,6 @@ Label=State
 Default=Disabled
 Description=How this event plug-in should respond to events. If Global, all jobs and Workers will trigger the events for this plugin. If Opt-In, jobs and Workers can choose to trigger the events for this plugin. If Disabled, no events are triggered for this plugin.
 
-[DefaultAction]
-Type=enum
-Values=Start on Startup, Stop on Idle;Create on Startup, Terminate on Idle;
-Category=Behaviour
-CategoryOrder=1
-Index=0
-Label=Default action(s)
-Default=Start on Startup, Stop on Idle
-Description=The default action to perform on the infrastructure upon startup and idle.
-
-[DefaultCreateImageID]
-Type=string
-Category=Create_on_Startup_Terminate_on_Idle_Behaviour
-CategoryOrder=2
-Index=0
-Label=Create image ID (ie. specific Sherpa image ID)
-Default=
-Description=The image ID to use upon Startup when default action(s) is `Create on Startup, Terminate on Idle`.
-
-[DefaultCreateSizeID]
-Type=string
-Category=Create_on_Startup_Terminate_on_Idle_Behaviour
-CategoryOrder=2
-Index=1
-Label=Create size ID (ie. specific Sherpa size ID)
-Default=
-Description=The size ID to use upon Startup when default action(s) is `Create on Startup, Terminate on Idle`.
-
 [SherpaIdentifierKey]
 Type=string
 Category=Configuration
