@@ -51,19 +51,20 @@ class SherpaPowerManagementEventListener(DeadlineEventListener):
                 self.LogInfo("Instance ID (" + instanceID + ") not found.")
 
     def OnIdleShutdown(self, groupName, slaveNames, IdleShutdownOptions):
-        slaveSettings = RepositoryUtils.GetSlaveSettings(slaveName, True)
-        instanceID = slaveSettings.GetSlaveExtraInfoKeyValue(self.GetConfigEntryWithDefault("SherpaIdentifierKey", "Sherpa_ID"))
+        for slaveName in slaveNames:
+            slaveSettings = RepositoryUtils.GetSlaveSettings(slaveName, True)
+            instanceID = slaveSettings.GetSlaveExtraInfoKeyValue(self.GetConfigEntryWithDefault("SherpaIdentifierKey", "Sherpa_ID"))
 
-        if instanceID:
-            self.LogInfo("Stop instance: ID " + instanceID + ".")
+            if instanceID:
+                self.LogInfo("Stop instance: ID " + instanceID + ".")
 
-            # get a list of all the names of cloud regions that are defined in Deadline, for the "Sherpa" specific cloud provider
-            sherpaCloudProviderRegionNames = CloudUtils.GetCloudRegionNames("Sherpa", True)
+                # get a list of all the names of cloud regions that are defined in Deadline, for the "Sherpa" specific cloud provider
+                sherpaCloudProviderRegionNames = CloudUtils.GetCloudRegionNames("Sherpa", True)
 
-            for regionName in sherpaCloudProviderRegionNames:
-                CloudUtils.StopInstance(
-                    regionName,
-                    instanceID
-                )
-        else:
-            self.LogInfo("Instance ID (" + instanceID + ") not found.")
+                for regionName in sherpaCloudProviderRegionNames:
+                    CloudUtils.StopInstance(
+                        regionName,
+                        instanceID
+                    )
+            else:
+                self.LogInfo("Instance ID (" + instanceID + ") not found.")
