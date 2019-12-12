@@ -5,6 +5,9 @@ from Deadline.Events import *
 from Deadline.Scripting import *
 from System.Collections.Generic import Dictionary
 
+ACTION_START = "start"
+ACTION_STOP = "stop"
+
 ####################################################################
 ## This is the function called by Deadline to get an instance of the
 ## Sherpa power management event listener.
@@ -32,39 +35,32 @@ class SherpaPowerManagementEventListener(DeadlineEventListener):
         del self.OnMachineStartupCallback
 
     def OnMachineStartup(self, groupName, slaveNames, MachineStartupOptions):
-        for slaveName in slaveNames:
-            slaveSettings = RepositoryUtils.GetSlaveSettings(slaveName, True)
-            instanceID = slaveSettings.GetSlaveExtraInfoKeyValue(self.GetConfigEntryWithDefault("SherpaIdentifierKey", "Sherpa_ID"))
-
-            if instanceID:
-                self.LogInfo("Start instance: ID " + instanceID + ".")
-
-                # get a list of all the names of cloud regions that are defined in Deadline, for the "Sherpa" specific cloud provider
-                sherpaCloudProviderRegionNames = CloudUtils.GetCloudRegionNames("Sherpa", True)
-
-                for regionName in sherpaCloudProviderRegionNames:
-                    CloudUtils.StartInstance(
-                        regionName,
-                        instanceID
-                    )
-            else:
-                self.LogInfo("Instance ID (" + instanceID + ") not found.")
+        self.__handle(ACTION_START, slavenames)
 
     def OnIdleShutdown(self, groupName, slaveNames, IdleShutdownOptions):
+        self.__handle(ACTION_STOP, slavenames)
+
+    def __handle(action, slaveNames):
         for slaveName in slaveNames:
             slaveSettings = RepositoryUtils.GetSlaveSettings(slaveName, True)
             instanceID = slaveSettings.GetSlaveExtraInfoKeyValue(self.GetConfigEntryWithDefault("SherpaIdentifierKey", "Sherpa_ID"))
 
             if instanceID:
-                self.LogInfo("Stop instance: ID " + instanceID + ".")
+                self.LogInfo(action.capitalize() + " instance: ID " + instanceID + ".")
 
                 # get a list of all the names of cloud regions that are defined in Deadline, for the "Sherpa" specific cloud provider
                 sherpaCloudProviderRegionNames = CloudUtils.GetCloudRegionNames("Sherpa", True)
 
                 for regionName in sherpaCloudProviderRegionNames:
-                    CloudUtils.StopInstance(
-                        regionName,
-                        instanceID
-                    )
+                    if action == ACTION_START:
+                        CloudUtils.StartInstance(
+                            regionName,
+                            instanceID
+                        )
+                    else:
+                        CloudUtils.StopInstance(
+                            regionName,
+                            instanceID
+                        )
             else:
                 self.LogInfo("Instance ID (" + instanceID + ") not found.")
