@@ -40,7 +40,7 @@ class SherpaPowerManagementEventListener(DeadlineEventListener):
     def OnIdleShutdown(self, groupName, slaveNames, IdleShutdownOptions):
         self.__handle(ACTION_STOP, slaveNames)
 
-    def __handle(action, slaveNames):
+    def __handle(self, action, slaveNames):
         for slaveName in slaveNames:
             slaveSettings = RepositoryUtils.GetSlaveSettings(slaveName, True)
             instanceID = slaveSettings.GetSlaveExtraInfoKeyValue(self.GetConfigEntryWithDefault("SherpaIdentifierKey", "Sherpa_ID"))
