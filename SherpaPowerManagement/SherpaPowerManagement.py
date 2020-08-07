@@ -35,10 +35,10 @@ class SherpaPowerManagementEventListener(DeadlineEventListener):
         del self.OnMachineStartupCallback
 
     def OnMachineStartup(self, groupName, slaveNames, MachineStartupOptions):
-        self.__handle(ACTION_START, slavenames)
+        self.__handle(ACTION_START, slaveNames)
 
     def OnIdleShutdown(self, groupName, slaveNames, IdleShutdownOptions):
-        self.__handle(ACTION_STOP, slavenames)
+        self.__handle(ACTION_STOP, slaveNames)
 
     def __handle(action, slaveNames):
         for slaveName in slaveNames:
